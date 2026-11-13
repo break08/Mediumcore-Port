@@ -8,6 +8,7 @@
     "FinishedYourMeal"
   ],
   "client": [
+    "GuiMixin",
     "client.CreateWorldScreenMixin",
     "client.SelectedGameModeMixin"
   ],

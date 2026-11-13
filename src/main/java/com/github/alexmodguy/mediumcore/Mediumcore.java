@@ -1,37 +1,26 @@
 package com.github.alexmodguy.mediumcore;
 
-import com.github.alexmodguy.mediumcore.client.ClientProxy;
+import com.github.alexmodguy.mediumcore.event.CommonEvents;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import com.mojang.logging.LogUtils;
+import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
 
-@Mod(Mediumcore.MODID)
-public class Mediumcore {
+public class Mediumcore implements ModInitializer {
     public static final String MODID = "mediumcore";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static CommonProxy PROXY = FMLEnvironment.dist == Dist.CLIENT ? new ClientProxy() : new CommonProxy();;
+    public static CommonProxy PROXY = new CommonProxy();;
 
     public static final ModConfigSpec CONFIG_SPEC;
     public static final MediumcoreConfig CONFIG;
@@ -44,46 +33,27 @@ public class Mediumcore {
         }
     }
 
-    public Mediumcore(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::registerPayloads);
 
-        NeoForge.EVENT_BUS.register(this);
-
-        modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG_SPEC);
-
-        PROXY.commonInit();
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            PROXY.clientInit();
-        }
+    /**
+     * Runs the mod initializer.
+     */
+    @Override
+    public void onInitialize() {
+        GameRuleRegistry.setup();
+        PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
+        CommonEvents.registerAll();
+        NeoForgeConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.SERVER, CONFIG_SPEC);
+        init();
     }
 
-    private void registerPayloads(final RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToClient(SyncMediumcoreGameRuleMessage.TYPE,
-                SyncMediumcoreGameRuleMessage.STREAM_CODEC,
-                SyncMediumcoreGameRuleMessage::handle);
+    private static MinecraftServer currentServer;
+    public static void init() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> currentServer = server);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> currentServer = null);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(GameRuleRegistry::setup);
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-    }
-
-    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-
-        }
-    }
-
-    public static <CustomPacketPayload> void sendMSGToAll(net.minecraft.network.protocol.common.custom.CustomPacketPayload message) {
-        assert ServerLifecycleHooks.getCurrentServer() != null;
-        sendMSGToAll(ServerLifecycleHooks.getCurrentServer(), message);
+    public static void sendMSGToAll(CustomPacketPayload message) {
+        sendMSGToAll(currentServer, message);
     }
 
     public static void sendMSGToAll(MinecraftServer server, CustomPacketPayload message) {
@@ -93,7 +63,7 @@ public class Mediumcore {
     }
 
     public static void sendNonLocal(CustomPacketPayload msg, ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, msg);
+        ServerPlayNetworking.send(player, msg);
     }
 
 }

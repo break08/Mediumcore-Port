@@ -1,11 +1,11 @@
 package com.github.alexmodguy.mediumcore.packet;
 
 import com.github.alexmodguy.mediumcore.Mediumcore;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SyncMediumcoreGameRuleMessage implements CustomPacketPayload {
 
@@ -29,8 +29,8 @@ public class SyncMediumcoreGameRuleMessage implements CustomPacketPayload {
         buf.writeBoolean(message.mediumcoreMode);
     }
 
-    public static void handle(SyncMediumcoreGameRuleMessage message, IPayloadContext context) {
-        context.enqueueWork(() -> Mediumcore.PROXY.setGameRuleLocalValue(message.mediumcoreMode));
+    public static void handle(SyncMediumcoreGameRuleMessage message, ClientPlayNetworking.Context context) {
+        context.client().execute(() -> Mediumcore.PROXY.setGameRuleLocalValue(message.mediumcoreMode));
     }
 
     @Override

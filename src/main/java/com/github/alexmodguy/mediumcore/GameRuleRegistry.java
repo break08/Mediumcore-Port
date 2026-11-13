@@ -3,8 +3,7 @@ package com.github.alexmodguy.mediumcore;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameRules;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class GameRuleRegistry {
     private static GameRules.Key<GameRules.BooleanValue> mediumcoreMode;

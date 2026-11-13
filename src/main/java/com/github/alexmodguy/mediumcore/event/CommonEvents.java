@@ -47,6 +47,12 @@ public class CommonEvents {
     private static final ResourceLocation HEALTH_MODIFIER_UUID =
             ResourceLocation.fromNamespaceAndPath(Mediumcore.MODID, "health_modifier");
 
+    public static void registerAll(){
+        onServerJoin();
+        onDeath();
+        onPlayerRespawn();
+    }
+
     public static void onServerJoin() {
         ServerPlayerEvents.JOIN.register((handler) -> {
             // onEntityJoinLevel(ServerStartedEvent event)
@@ -90,7 +96,7 @@ public class CommonEvents {
     }
 
 
-    public void onPlayerRespawn() {
+    public static void onPlayerRespawn() {
         ServerPlayerEvents.AFTER_RESPAWN.register((pOld, pNew, realDeath) -> {
             if (!realDeath && !pNew.level().isClientSide) {
                 if (GameRuleRegistry.isMediumCoreMode(pNew.level().getGameRules())) {
