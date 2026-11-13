@@ -36,8 +36,8 @@ public class ClientProxy extends CommonProxy {
         NeoForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPostRenderGuiOverlay(RenderGuiLayerEvent.Post event) {
+
         Player player = Minecraft.getInstance().player;
         if (Mediumcore.CONFIG.mediumcoreHeartTexture.get() && event.getName().equals(VanillaGuiLayers.PLAYER_HEALTH) && Minecraft.getInstance().gameMode.canHurtPlayer() && mediumcoreMode && Minecraft.getInstance().getCameraEntity() instanceof Player && Gui.HeartType.forPlayer(player) == Gui.HeartType.NORMAL) {
             int leftHeight = 39;

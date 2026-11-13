@@ -4,7 +4,8 @@
   "package": "com.github.alexmodguy.mediumcore.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "DedicatedServerPropertiesMixin"
+    "DedicatedServerPropertiesMixin",
+    "FinishedYourMeal"
   ],
   "client": [
     "client.CreateWorldScreenMixin",
