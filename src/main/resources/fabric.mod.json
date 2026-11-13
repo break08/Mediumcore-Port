@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "mediumcore",
+	"version": "${version}",
+	"name": "Mediumcore Port",
+	"description": "A difficulty option between Hardcore and Regular Survival",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/mediumcore-port/",
+		"sources": "https://github.com/break08/Mediumcore-Port"
+	},
+	"license": "GPLv3.0-only",
+	"icon": "assets/mediumcore/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.github.alexmodguy.mediumcore.Mediumcore"
+		]
+	},
+	"mixins": [
+		"mediumcore.mixins.json"
+	],
+        "accessWidener" : "mediumcore.classtweaker",
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": ">=1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
