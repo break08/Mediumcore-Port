@@ -1,6 +1,7 @@
 package com.github.alexmodguy.mediumcore;
 
 import com.github.alexmodguy.mediumcore.client.ClientProxy;
+import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
@@ -11,6 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -18,6 +20,8 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,13 +46,27 @@ public class Mediumcore {
 
     public Mediumcore(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerPayloads);
 
         NeoForge.EVENT_BUS.register(this);
 
-        //modContainer.registerConfig(ModConfig.Type.COMMON, MediumcoreConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG_SPEC);
+
+        PROXY.commonInit();
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            PROXY.clientInit();
+        }
+    }
+
+    private void registerPayloads(final RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar("1");
+        registrar.playToClient(SyncMediumcoreGameRuleMessage.TYPE,
+                SyncMediumcoreGameRuleMessage.STREAM_CODEC,
+                SyncMediumcoreGameRuleMessage::handle);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(GameRuleRegistry::setup);
     }
 
     @SubscribeEvent
