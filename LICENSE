@@ -5,7 +5,13 @@
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
-Project is a fork of Mediumcore by AlexModGuy under GNU-GPLv3.0
+ Project is a fork of Mediumcore by AlexModGuy under GNU-GPLv3.0
+          https://modrinth.com/mod/alexs-mediumcore
+
+ Code in src/main/java/com/github/alexmodguy/mediumcore/mixins/GuiMixin.java
+                   in branch: 1.21.1-fabric
+based on and modified from repo Mediumcore Gamemode of Txni (under GNU-GPLv3.0)
+   https://www.curseforge.com/minecraft/mc-mods/mediumcore-gamemode
 
                             Preamble
 
