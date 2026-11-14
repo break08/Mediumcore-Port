@@ -32,4 +32,5 @@ public class FabricIsSoBadAtDataAttach {
     public static CompoundTag getPersistentData(Entity entity) {
         return entity.getAttachedOrCreate(TYPE);
     }
+    public static void init() {}
 }

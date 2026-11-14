@@ -40,10 +40,11 @@ public class Mediumcore implements ModInitializer {
     @Override
     public void onInitialize() {
         GameRuleRegistry.setup();
-        PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
         CommonEvents.registerAll();
-        NeoForgeConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.SERVER, CONFIG_SPEC);
+        NeoForgeConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
         init();
+        FabricIsSoBadAtDataAttach.init();
+        PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
     }
 
     private static MinecraftServer currentServer;

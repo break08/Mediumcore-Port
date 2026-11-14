@@ -3,15 +3,15 @@ package com.github.alexmodguy.mediumcore.event;
 import com.github.alexmodguy.mediumcore.FabricIsSoBadAtDataAttach;
 import com.github.alexmodguy.mediumcore.GameRuleRegistry;
 import com.github.alexmodguy.mediumcore.Mediumcore;
-import com.github.alexmodguy.mediumcore.MediumcoreTags;
 import com.github.alexmodguy.mediumcore.misc.DedicatedServerPropertiesAccessor;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import org.apache.logging.log4j.core.jmx.Server;
+import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 /*
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -36,8 +36,6 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
  */
-
-import java.util.UUID;
 
 public class CommonEvents {
 
@@ -102,7 +100,15 @@ public class CommonEvents {
                 if (GameRuleRegistry.isMediumCoreMode(pNew.level().getGameRules())) {
                     CompoundTag tag = FabricIsSoBadAtDataAttach.getPersisted(pNew);
                     double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG);
-                    updateHealth(pNew, healthModifiedBy);
+                    MinecraftServer server = pNew.getServer();
+                    if (server == null){
+                        return;
+                    }
+                    server.tell(new TickTask(server.getTickCount(), () -> {
+                        updateHealth(pNew, healthModifiedBy);
+                        pNew.connection.send(new ClientboundUpdateAttributesPacket(pNew.getId(), pNew.getAttributes().getSyncableAttributes()));
+                        pNew.connection.send(new ClientboundSetHealthPacket(pNew.getHealth(), pNew.getFoodData().getFoodLevel(), pNew.getFoodData().getSaturationLevel()));
+                    }));
                 }
             }
         });
@@ -125,6 +131,9 @@ public class CommonEvents {
 
     public static void updateHealth(Player player, double healthModifiedBy) {
         AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
+        if (attribute == null){
+            return;
+        }
         attribute.removeModifier(INITIAL_HEALTH_MODIFIER_UUID);
         attribute.addPermanentModifier(new AttributeModifier(INITIAL_HEALTH_MODIFIER_UUID, Mediumcore.CONFIG.startingPlayerHealth.get() - 20F, AttributeModifier.Operation.ADD_VALUE));
         attribute.removeModifier(HEALTH_MODIFIER_UUID);

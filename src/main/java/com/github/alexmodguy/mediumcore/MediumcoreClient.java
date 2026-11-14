@@ -2,7 +2,7 @@ package com.github.alexmodguy.mediumcore;
 
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class MediumcoreClient implements ClientModInitializer {
     /**
@@ -10,6 +10,6 @@ public class MediumcoreClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage::handle);
     }
 }

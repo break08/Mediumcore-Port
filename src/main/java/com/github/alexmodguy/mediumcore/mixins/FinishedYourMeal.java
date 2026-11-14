@@ -19,7 +19,7 @@ import static com.github.alexmodguy.mediumcore.event.CommonEvents.updateHealth;
 
 @Mixin(LivingEntity.class)
 public class FinishedYourMeal {
-    @Inject(method = "completeUsingItem", at = @At("TAIL"))
+    @Inject(method = "completeUsingItem", at = @At("HEAD"))
     public void restoreMaxHealth(CallbackInfo ci){
         LivingEntity living = (LivingEntity)(Object)this;
         if (living instanceof Player player && !player.level().isClientSide) {
