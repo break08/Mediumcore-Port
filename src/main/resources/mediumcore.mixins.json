@@ -5,11 +5,13 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "DedicatedServerPropertiesMixin",
-    "FinishedYourMeal"
+    "FinishedYourMeal",
+    "GameRuleMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
-    "GuiMixin",
     "client.CreateWorldScreenMixin",
+    "client.GuiMixin",
     "client.SelectedGameModeMixin"
   ],
   "injectors": {

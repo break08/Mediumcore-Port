@@ -16,7 +16,8 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.github.alexmodguy.mediumcore.Mediumcore"
+			"com.github.alexmodguy.mediumcore.Mediumcore",
+			"com.github.alexmodguy.mediumcore.GameRuleRegistry"
 		],
 		"client": [
 			"com.github.alexmodguy.mediumcore.MediumcoreClient"

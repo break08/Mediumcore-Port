@@ -5,12 +5,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SyncMediumcoreGameRuleMessage implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SyncMediumcoreGameRuleMessage> TYPE =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Mediumcore.MODID, "sync_mediumcore_game_rule"));
+            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(Mediumcore.MODID, "sync_mediumcore_game_rule"));
 
     public static final StreamCodec<FriendlyByteBuf, SyncMediumcoreGameRuleMessage> STREAM_CODEC =
             StreamCodec.ofMember(SyncMediumcoreGameRuleMessage::write, SyncMediumcoreGameRuleMessage::read);

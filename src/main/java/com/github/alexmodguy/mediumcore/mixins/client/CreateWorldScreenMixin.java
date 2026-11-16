@@ -9,8 +9,8 @@ import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelSettings;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -63,6 +63,7 @@ public class CreateWorldScreenMixin {
         }
     }
 
+    @Unique
     private void mediumcore_processWidget(AbstractWidget widget) {
         if(widget instanceof CycleButton cycleButton && cycleButton.getValue() instanceof WorldCreationUiState.SelectedGameMode){ //for cycle buttons pertaining to game mode
             if(!cycleButton.values.getDefaultList().contains(ClientMediumcoreUtil.getMediumcoreGameMode()) || !cycleButton.values.getSelectedList().contains(ClientMediumcoreUtil.getMediumcoreGameMode())){

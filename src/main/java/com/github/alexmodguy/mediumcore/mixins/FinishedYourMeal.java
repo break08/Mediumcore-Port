@@ -5,6 +5,7 @@ import com.github.alexmodguy.mediumcore.GameRuleRegistry;
 import com.github.alexmodguy.mediumcore.Mediumcore;
 import com.github.alexmodguy.mediumcore.MediumcoreTags;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,11 +23,11 @@ public class FinishedYourMeal {
     @Inject(method = "completeUsingItem", at = @At("HEAD"))
     public void restoreMaxHealth(CallbackInfo ci){
         LivingEntity living = (LivingEntity)(Object)this;
-        if (living instanceof Player player && !player.level().isClientSide) {
-            if (player.getUseItem().is(MediumcoreTags.RESTORES_MAX_HEALTH) && GameRuleRegistry.isMediumCoreMode(player.level().getGameRules())) {
+        if (living instanceof Player player && !player.level().isClientSide() && player.level() instanceof ServerLevel server) {
+            if (player.getUseItem().is(MediumcoreTags.RESTORES_MAX_HEALTH) && GameRuleRegistry.isMediumCoreMode(server.getGameRules())) {
                 CompoundTag tag = FabricIsSoBadAtDataAttach.getPersisted(player);
                 double clampedHealth = Mth.clamp(player.getMaxHealth() + Mediumcore.CONFIG.healthIncreasePerHeal.get(), Mediumcore.CONFIG.minimumPlayerHealth.get(), Mediumcore.CONFIG.maxPlayerHealth.get());
-                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG) + (clampedHealth - player.getMaxHealth());
+                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D) + (clampedHealth - player.getMaxHealth());
                 tag.putDouble(HEALTH_MODIFIER_TAG, healthModifiedBy);
                 FabricIsSoBadAtDataAttach.getPersistentData(player).put(PERSISTED_NBT_TAG, tag);
                 updateHealth(player, healthModifiedBy);

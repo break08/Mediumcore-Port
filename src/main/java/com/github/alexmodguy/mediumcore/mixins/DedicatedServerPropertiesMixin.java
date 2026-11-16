@@ -17,7 +17,7 @@ public abstract class DedicatedServerPropertiesMixin extends Settings implements
         super(properties);
     }
 
-    public boolean isServerMediumcore() {
+    public boolean mediumcore$isServerMediumcore() {
         return mediumcore;
     }
 }

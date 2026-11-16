@@ -3,7 +3,7 @@ package com.github.alexmodguy.mediumcore;
 import com.github.alexmodguy.mediumcore.event.CommonEvents;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import com.mojang.logging.LogUtils;
-import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -39,9 +39,8 @@ public class Mediumcore implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        GameRuleRegistry.setup();
         CommonEvents.registerAll();
-        NeoForgeConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
+        ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
         init();
         FabricIsSoBadAtDataAttach.init();
         PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);

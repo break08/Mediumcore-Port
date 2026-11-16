@@ -1,16 +1,16 @@
 package com.github.alexmodguy.mediumcore;
 
 public class CommonProxy {
-    private boolean mediumcoreModeLocally = false;
+    private static boolean mediumcoreModeLocally = false;
 
     public void clientInit() {
     }
 
     public void setGameRuleLocalValue(boolean mediumcoreMode) {
-        this.mediumcoreModeLocally = mediumcoreMode;
+        mediumcoreModeLocally = mediumcoreMode;
     }
 
-    public boolean isMediumcoreModeLocally() {
+    public static boolean isMediumcoreModeLocally() {
         return mediumcoreModeLocally;
     }
 }

@@ -1,7 +1,5 @@
 classTweaker v1 named
 accessible class net/minecraft/client/gui/Gui$HeartType
-accessible method net/minecraft/world/level/GameRules$BooleanValue create (ZLjava/util/function/BiConsumer;)Lnet/minecraft/world/level/GameRules$Type;
-accessible method net/minecraft/world/level/GameRules register (Ljava/lang/String;Lnet/minecraft/world/level/GameRules$Category;Lnet/minecraft/world/level/GameRules$Type;)Lnet/minecraft/world/level/GameRules$Key;
 accessible field net/minecraft/client/gui/components/CycleButton values Lnet/minecraft/client/gui/components/CycleButton$ValueListSupplier;
 mutable field net/minecraft/client/gui/components/CycleButton values Lnet/minecraft/client/gui/components/CycleButton$ValueListSupplier;
 accessible method net/minecraft/client/gui/components/CycleButton cycleValue (I)V
@@ -9,3 +7,4 @@ extendable  method net/minecraft/client/gui/components/CycleButton cycleValue (I
 accessible method net/minecraft/client/gui/components/tabs/GridLayoutTab visitChildren (Ljava/util/function/Consumer;)V
 accessible class net/minecraft/client/gui/screens/worldselection/CreateWorldScreen$GameTab
 accessible field net/minecraft/client/gui/components/tabs/TabNavigationBar tabs Lcom/google/common/collect/ImmutableList;
+accessible method net/minecraft/world/level/gamerules/GameRules register (Ljava/lang/String;Lnet/minecraft/world/level/gamerules/GameRuleCategory;Lnet/minecraft/world/level/gamerules/GameRuleType;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/world/level/gamerules/GameRules$VisitorCaller;Ljava/util/function/ToIntFunction;)Lnet/minecraft/world/level/gamerules/GameRule;
