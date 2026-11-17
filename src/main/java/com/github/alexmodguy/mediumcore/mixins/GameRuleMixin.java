@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.github.alexmodguy.mediumcore.CommonProxy.isMediumcoreModeLocally;
-
 @Mixin(GameRules.class)
 public class GameRuleMixin {
     @Inject(method = "set", at = @At("HEAD"))

@@ -56,7 +56,7 @@ public class CreateWorldScreenMixin {
     )
     public void mediumcore_createLevelSettings(boolean debug, CallbackInfoReturnable<LevelSettings> cir) {
         if(mediumcorePort$modifiedCycleButton != null && mediumcorePort$modifiedCycleButton.getValue() == ClientMediumcoreUtil.getMediumcoreGameMode()){
-            GameRules gameRules = cir.getReturnValue().gameRules();
+            GameRules gameRules = cir.getReturnValue().;
             GameRuleRegistry.setMediumcoreMode(gameRules, true, null);
             Mediumcore.LOGGER.info("Set mediumcoreMode config by default to true on world creation");
             cir.setReturnValue(cir.getReturnValue());

@@ -43,7 +43,7 @@ public class Mediumcore implements ModInitializer {
         ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
         init();
         FabricIsSoBadAtDataAttach.init();
-        PayloadTypeRegistry.playS2C().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
     }
 
     private static MinecraftServer currentServer;
