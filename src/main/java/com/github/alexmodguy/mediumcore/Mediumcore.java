@@ -37,15 +37,14 @@ public class Mediumcore implements ModInitializer {
     /**
      * Runs the mod initializer.
      */
-    @Override
-    public void onInitialize() {
-        CommonEvents.registerAll();
-        ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
-        init();
-        FabricIsSoBadAtDataAttach.init();
-        PayloadTypeRegistry.serverboundPlay().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
-    }
-
+	@Override
+	public void onInitialize() {
+    		PayloadTypeRegistry.clientboundPlay().register(SyncMediumcoreGameRuleMessage.TYPE, SyncMediumcoreGameRuleMessage.STREAM_CODEC);
+    		CommonEvents.registerAll();
+    		ConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, CONFIG_SPEC);
+    		init();
+    		FabricIsSoBadAtDataAttach.init();
+	}
     private static MinecraftServer currentServer;
     public static void init() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> currentServer = server);

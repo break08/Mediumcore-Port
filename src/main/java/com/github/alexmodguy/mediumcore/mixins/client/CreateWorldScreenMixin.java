@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.world.level.LevelSettings;
-import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,7 +33,7 @@ public class CreateWorldScreenMixin {
     private CycleButton mediumcorePort$modifiedCycleButton;
 
     @Inject(
-            method = {"Lnet/minecraft/client/gui/screens/worldselection/CreateWorldScreen;init()V"},
+            method = {"init()V"},
             remap = true,
             at = @At(value = "TAIL")
     )
@@ -56,8 +55,8 @@ public class CreateWorldScreenMixin {
     )
     public void mediumcore_createLevelSettings(boolean debug, CallbackInfoReturnable<LevelSettings> cir) {
         if(mediumcorePort$modifiedCycleButton != null && mediumcorePort$modifiedCycleButton.getValue() == ClientMediumcoreUtil.getMediumcoreGameMode()){
-            GameRules gameRules = cir.getReturnValue().;
-            GameRuleRegistry.setMediumcoreMode(gameRules, true, null);
+            CreateWorldScreen self = (CreateWorldScreen) (Object) this;
+            GameRuleRegistry.setMediumcoreMode(self.getUiState().getGameRules(), true, null);
             Mediumcore.LOGGER.info("Set mediumcoreMode config by default to true on world creation");
             cir.setReturnValue(cir.getReturnValue());
         }
