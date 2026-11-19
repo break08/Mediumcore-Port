@@ -4,7 +4,7 @@ Credit to Txni for Fabric Gui Mixin code: https://github.com/txnimc/Mediumcore/b
  */
 package com.github.alexmodguy.mediumcore.mixins.client;
 import com.github.alexmodguy.mediumcore.Mediumcore;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Gui.HeartType.class)
+@Mixin(Hud.HeartType.class)
 public class GuiMixin
 {
 	@Unique private final Identifier mediumcore$Full = Identifier.fromNamespaceAndPath("mediumcore", "heart/full");
@@ -24,7 +24,7 @@ public class GuiMixin
     @Inject(at = @At("HEAD"), method = "getSprite", cancellable = true)
     public void getSpriteMediumcore(boolean hardcore, boolean halfHeart, boolean blinking, CallbackInfoReturnable<Identifier> cir)
     {
-        if ((Object) this != Gui.HeartType.NORMAL) {
+        if ((Object) this != Hud.HeartType.NORMAL) {
             return;
         }
 

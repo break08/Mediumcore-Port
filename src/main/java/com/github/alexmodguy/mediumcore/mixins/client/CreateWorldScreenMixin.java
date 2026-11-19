@@ -5,6 +5,7 @@ import com.github.alexmodguy.mediumcore.Mediumcore;
 import com.github.alexmodguy.mediumcore.client.ClientMediumcoreUtil;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
@@ -25,15 +26,14 @@ import java.util.List;
 @Mixin(CreateWorldScreen.class)
 public class CreateWorldScreenMixin {
 
-    @Shadow @Nullable
-    private TabNavigationBar tabNavigationBar;
+    @Shadow private MenuTabBar tabNavigationBar;
 
     @Unique
     @Nullable
     private CycleButton mediumcorePort$modifiedCycleButton;
 
     @Inject(
-            method = {"init()V"},
+            method = {"Lnet/minecraft/client/gui/screens/worldselection/CreateWorldScreen;init()V"},
             remap = true,
             at = @At(value = "TAIL")
     )

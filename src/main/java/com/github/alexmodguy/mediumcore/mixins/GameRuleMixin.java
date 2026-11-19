@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRuleMixin {
     @Inject(method = "set", at = @At("HEAD"))
     private <T> void set(GameRule<T> gameRule, T object, @Nullable MinecraftServer server, CallbackInfo ci){
-	if (gameRule == GameRuleRegistry.getMediumcoreGamerule() && server != null){
-    		Mediumcore.sendMSGToAll(server, new SyncMediumcoreGameRuleMessage((Boolean) object));
-	}
+        if (gameRule == GameRuleRegistry.getMediumcoreGamerule() && server != null){
+                Mediumcore.sendMSGToAll(server, new SyncMediumcoreGameRuleMessage((Boolean) object));
+        }
     }
 }

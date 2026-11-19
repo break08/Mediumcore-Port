@@ -1,5 +1,5 @@
 classTweaker v2 official
-accessible class net/minecraft/client/gui/Gui$HeartType
+accessible class net/minecraft/client/gui/Hud$HeartType
 accessible field net/minecraft/client/gui/components/CycleButton values Lnet/minecraft/client/gui/components/CycleButton$ValueListSupplier;
 mutable field net/minecraft/client/gui/components/CycleButton values Lnet/minecraft/client/gui/components/CycleButton$ValueListSupplier;
 accessible method net/minecraft/client/gui/components/CycleButton cycleValue (I)V
