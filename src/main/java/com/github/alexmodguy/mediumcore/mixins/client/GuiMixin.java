@@ -32,6 +32,11 @@ public class GuiMixin
             return;
         }
 
+        // fix config option does not work
+        if (!Mediumcore.CONFIG.mediumcoreHeartTexture.get()){
+            return;
+        }
+
         if (halfHeart) {
             cir.setReturnValue(blinking ? this.mediumcore$HalfBlinking : mediumcore$Half);
         } else {

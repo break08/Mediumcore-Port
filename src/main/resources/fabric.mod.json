@@ -7,7 +7,7 @@
 	"authors": [
 		"break08"
 	],
-	"credit": "Credit to AlexModGuy",
+	"credit": "Credit to AlexModGuy - original mod author and some code of Txni",
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/mediumcore-port/",
 		"sources": "https://github.com/break08/Mediumcore-Port"
@@ -26,11 +26,11 @@
 	"mixins": [
 		"mediumcore.mixins.json"
 	],
-        "accessWidener" : "mediumcore.classtweaker",
+	"accessWidener" : "mediumcore.classtweaker",
 	"depends": {
 		"fabricloader": ">=0.20.1",
 		"minecraft": ">=26.2",
-		"java": ">=21",
+		"java": ">=25",
 		"fabric-api": "*",
 		"forgeconfigapiport": "*"
 	}
