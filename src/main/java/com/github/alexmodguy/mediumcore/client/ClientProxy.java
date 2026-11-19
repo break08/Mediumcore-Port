@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
@@ -28,7 +28,7 @@ import net.neoforged.neoforge.common.NeoForge;
 
 public class ClientProxy extends CommonProxy {
 
-    private static final ResourceLocation MEDIUMCORE_HEARTS_TEXTURE = ResourceLocation.fromNamespaceAndPath("mediumcore", "textures/gui/mediumcore_hearts.png");
+    private static final Identifier MEDIUMCORE_HEARTS_TEXTURE = Identifier.fromNamespaceAndPath("mediumcore", "textures/gui/mediumcore_hearts.png");
     private static final RandomSource random = RandomSource.create();
     private boolean mediumcoreMode;
 
@@ -79,12 +79,12 @@ public class ClientProxy extends CommonProxy {
                 if (i == regen) {
                     y -= 2;
                 }
-                event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU, heartV + 18, 9, 9, 64, 32);
+                event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU, heartV + 18, 9, 9, 64);
 
                 if (i * 2 + 1 < health) {
-                    event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU, heartV, 9, 9, 64, 32);
+                    event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU, heartV, 9, 9, 64);
                 } else if (i * 2 + 1 == health) {
-                    event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU + 9, heartV, 9, 9, 64, 32);
+                    event.getGuiGraphics().blit(MEDIUMCORE_HEARTS_TEXTURE, x, y, 50, heartU + 9, heartV, 9, 9, 64);
                 }
             }
             event.getGuiGraphics().pose().popPose();

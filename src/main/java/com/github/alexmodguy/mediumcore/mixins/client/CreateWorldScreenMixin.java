@@ -9,8 +9,8 @@ import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelSettings;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,21 +19,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(CreateWorldScreen.class)
 public class CreateWorldScreenMixin {
 
-    @Shadow @Nullable private TabNavigationBar tabNavigationBar;
+    @Shadow @Nullable
+    private TabNavigationBar tabNavigationBar;
 
     @Unique
     @Nullable
     private CycleButton mediumcorePort$modifiedCycleButton;
 
     @Inject(
-            method = {"Lnet/minecraft/client/gui/screens/worldselection/CreateWorldScreen;init()V"},
+            method = {"init()V"},
             remap = true,
             at = @At(value = "TAIL")
     )
@@ -55,13 +55,14 @@ public class CreateWorldScreenMixin {
     )
     public void mediumcore_createLevelSettings(boolean debug, CallbackInfoReturnable<LevelSettings> cir) {
         if(mediumcorePort$modifiedCycleButton != null && mediumcorePort$modifiedCycleButton.getValue() == ClientMediumcoreUtil.getMediumcoreGameMode()){
-            GameRules gameRules = cir.getReturnValue().gameRules();
-            GameRuleRegistry.setMediumcoreMode(gameRules, true, null);
+            CreateWorldScreen self = (CreateWorldScreen) (Object) this;
+            GameRuleRegistry.setMediumcoreMode(self.getUiState().getGameRules(), true, null);
             Mediumcore.LOGGER.info("Set mediumcoreMode config by default to true on world creation");
             cir.setReturnValue(cir.getReturnValue());
         }
     }
 
+    @Unique
     private void mediumcore_processWidget(AbstractWidget widget) {
         if(widget instanceof CycleButton cycleButton && cycleButton.getValue() instanceof WorldCreationUiState.SelectedGameMode){ //for cycle buttons pertaining to game mode
             if(!cycleButton.values.getDefaultList().contains(ClientMediumcoreUtil.getMediumcoreGameMode()) || !cycleButton.values.getSelectedList().contains(ClientMediumcoreUtil.getMediumcoreGameMode())){

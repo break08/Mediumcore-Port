@@ -6,8 +6,9 @@ import com.github.alexmodguy.mediumcore.MediumcoreTags;
 import com.github.alexmodguy.mediumcore.misc.DedicatedServerPropertiesAccessor;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -36,10 +37,10 @@ import java.util.UUID;
 public class CommonEvents {
 
     private static final String HEALTH_MODIFIER_TAG = "MediumcoreHealthModifier";
-    private static final ResourceLocation INITIAL_HEALTH_MODIFIER_UUID =
-            ResourceLocation.fromNamespaceAndPath(Mediumcore.MODID, "initial_health_modifier");
-    private static final ResourceLocation HEALTH_MODIFIER_UUID =
-            ResourceLocation.fromNamespaceAndPath(Mediumcore.MODID, "health_modifier");
+    private static final Identifier INITIAL_HEALTH_MODIFIER_UUID =
+            Identifier.fromNamespaceAndPath(Mediumcore.MODID, "initial_health_modifier");
+    private static final Identifier HEALTH_MODIFIER_UUID =
+            Identifier.fromNamespaceAndPath(Mediumcore.MODID, "health_modifier");
 
     @SubscribeEvent
     public void onEntityJoinLevel(ServerStartedEvent event) {
@@ -54,12 +55,12 @@ public class CommonEvents {
 
     @SubscribeEvent
     public void onEntityJoinLevel(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Player player && !event.getLevel().isClientSide) {
-            boolean mediumcore = GameRuleRegistry.isMediumCoreMode(event.getLevel().getGameRules());
+        if (event.getEntity() instanceof Player player && !event.getLevel().isClientSide() && event.getLevel() instanceof ServerLevel serverLevel) {
+            boolean mediumcore = GameRuleRegistry.isMediumCoreMode(serverLevel.getGameRules());
             if (mediumcore && player instanceof ServerPlayer) {
                 Mediumcore.sendNonLocal(new SyncMediumcoreGameRuleMessage(mediumcore), (ServerPlayer) player);
-                CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG);
+                CompoundTag tag = event.getEntity().getPersistentData();
+                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D);
                 updateHealth(player, healthModifiedBy);
             }
         }
@@ -67,11 +68,11 @@ public class CommonEvents {
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
-            if (GameRuleRegistry.isMediumCoreMode(player.level().getGameRules())) {
-                CompoundTag tag = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide() && player.level() instanceof ServerLevel serverLevel) {
+            if (GameRuleRegistry.isMediumCoreMode(serverLevel.getGameRules())) {
+                CompoundTag tag = player.getPersistentData();
                 double clampedHealth = Mth.clamp(player.getMaxHealth() - Mediumcore.CONFIG.healthDecreasePerDeath.get(), Mediumcore.CONFIG.minimumPlayerHealth.get(), Mediumcore.CONFIG.maxPlayerHealth.get());
-                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG) + (clampedHealth - player.getMaxHealth());
+                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D) + (clampedHealth - player.getMaxHealth());
                 tag.putDouble(HEALTH_MODIFIER_TAG, healthModifiedBy);
                 player.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
             }
@@ -80,10 +81,10 @@ public class CommonEvents {
 
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (!event.isEndConquered() && !event.getEntity().level().isClientSide) {
-            if (GameRuleRegistry.isMediumCoreMode(event.getEntity().level().getGameRules())) {
-                CompoundTag tag = event.getEntity().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG);
+        if (!event.isEndConquered() && !event.getEntity().level().isClientSide() && event.getEntity().level() instanceof ServerLevel serverLevel) {
+            if (GameRuleRegistry.isMediumCoreMode(serverLevel.getGameRules())) {
+                CompoundTag tag = event.getEntity().getPersistentData();
+                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D);
                 updateHealth(event.getEntity(), healthModifiedBy);
             }
         }
@@ -91,11 +92,11 @@ public class CommonEvents {
 
     @SubscribeEvent
     public void onLivingFinishUsingItem(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
-            if (event.getItem().is(MediumcoreTags.RESTORES_MAX_HEALTH) && GameRuleRegistry.isMediumCoreMode(event.getEntity().level().getGameRules())) {
-                CompoundTag tag = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide() && event.getEntity().level() instanceof ServerLevel serverLevel) {
+            if (event.getItem().is(MediumcoreTags.RESTORES_MAX_HEALTH) && GameRuleRegistry.isMediumCoreMode(serverLevel.getGameRules())) {
+                CompoundTag tag = player.getPersistentData();
                 double clampedHealth = Mth.clamp(player.getMaxHealth() + Mediumcore.CONFIG.healthIncreasePerHeal.get(), Mediumcore.CONFIG.minimumPlayerHealth.get(), Mediumcore.CONFIG.maxPlayerHealth.get());
-                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG) + (clampedHealth - player.getMaxHealth());
+                double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D) + (clampedHealth - player.getMaxHealth());
                 tag.putDouble(HEALTH_MODIFIER_TAG, healthModifiedBy);
                 player.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
                 updateHealth(player, healthModifiedBy);
