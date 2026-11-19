@@ -6,12 +6,8 @@ license = "${mod_license}"
 modId = "${mod_id}" #mandatory
 version = "${mod_version}" #mandatory
 displayName = "${mod_name}" #mandatory
-# A URL to query for updates for this mod. See the JSON update specification https://docs.neoforge.net/docs/misc/updatechecker/
-#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-# A URL for the "homepage" for this mod, displayed in the mod UI
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
-# A file name (in the root of the mod JAR) containing a logo for display
-#logoFile="mediumcore.png" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/mediumcore-port/" #optional
+logoFile="mediumcore.png" #optional
 credits="Credit to AlexModGuy" #optional
 authors = "${mod_authors}" #optional
 description = '''${mod_description}'''
