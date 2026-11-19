@@ -32,8 +32,8 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Forge Config API port
-	api("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.2.1")
-	runtimeOnly "maven.modrinth:ohNO6lps:rSd3GiG8"
+	api("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:26.3.1")
+	runtimeOnly "maven.modrinth:ohNO6lps:JpKvrr9J"
 }
 
 processResources {
