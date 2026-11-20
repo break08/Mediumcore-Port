@@ -4,12 +4,10 @@
   "package": "com.github.alexmodguy.mediumcore.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "DedicatedServerPropertiesMixin",
-    "GameRuleMixin"
+    "DedicatedServerPropertiesMixin"
   ],
   "client": [
     "client.CreateWorldScreenMixin",
-    "client.GuiMixin",
     "client.SelectedGameModeMixin"
   ],
   "injectors": {

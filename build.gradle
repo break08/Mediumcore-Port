@@ -107,8 +107,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             mod_authors            : mod_authors,
             mod_description        : mod_description,
-            neo_version_range      : neo_version_range,
-            forgified_fabric_api_ver : forgified_fabric_api_ver
+            neo_version_range      : neo_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties

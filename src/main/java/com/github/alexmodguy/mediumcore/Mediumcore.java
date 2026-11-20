@@ -1,9 +1,8 @@
 package com.github.alexmodguy.mediumcore;
 
-import com.github.alexmodguy.mediumcore.event.CommonEvents;
+import com.github.alexmodguy.mediumcore.client.ClientProxy;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
@@ -22,7 +22,6 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,7 +31,7 @@ public class Mediumcore {
     public static final String MODID = "mediumcore";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static CommonProxy PROXY = new CommonProxy();
+    public static CommonProxy PROXY = FMLEnvironment.dist == Dist.CLIENT ? new ClientProxy() : new CommonProxy();;
 
     public static final ModConfigSpec CONFIG_SPEC;
     public static final MediumcoreConfig CONFIG;
@@ -46,26 +45,17 @@ public class Mediumcore {
     }
 
     public Mediumcore(IEventBus modEventBus, ModContainer modContainer) {
+        modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerPayloads);
 
         NeoForge.EVENT_BUS.register(this);
 
-        modEventBus.addListener((RegisterEvent event) -> {
-            if (event.getRegistryKey().equals(Registries.GAME_RULE)) {
-                GameRuleRegistry.setup();
-            }
-        });
-
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG_SPEC);
 
-        if (FMLEnvironment.getDist() == Dist.DEDICATED_SERVER) {
-            PROXY.commonInit();
-        }
-        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+        PROXY.commonInit();
+        if (FMLEnvironment.dist == Dist.CLIENT) {
             PROXY.clientInit();
         }
-
-        CommonEvents.registerAll();
     }
 
     private void registerPayloads(final RegisterPayloadHandlersEvent event) {
@@ -75,6 +65,9 @@ public class Mediumcore {
                 SyncMediumcoreGameRuleMessage::handle);
     }
 
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(GameRuleRegistry::setup);
+    }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {

@@ -4,13 +4,13 @@ import com.github.alexmodguy.mediumcore.Mediumcore;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SyncMediumcoreGameRuleMessage implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SyncMediumcoreGameRuleMessage> TYPE =
-            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(Mediumcore.MODID, "sync_mediumcore_game_rule"));
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Mediumcore.MODID, "sync_mediumcore_game_rule"));
 
     public static final StreamCodec<FriendlyByteBuf, SyncMediumcoreGameRuleMessage> STREAM_CODEC =
             StreamCodec.ofMember(SyncMediumcoreGameRuleMessage::write, SyncMediumcoreGameRuleMessage::read);
