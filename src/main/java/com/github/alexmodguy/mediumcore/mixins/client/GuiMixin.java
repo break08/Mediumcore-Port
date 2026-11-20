@@ -3,12 +3,9 @@ File added on 13/11/2026
 Credit to Txni for Fabric Gui Mixin code: https://github.com/txnimc/Mediumcore/blob/master/src/main/java/com/github/alexmodguy/mediumcore/mixins/GuiMixin.java
  */
 package com.github.alexmodguy.mediumcore.mixins.client;
-import com.github.alexmodguy.mediumcore.GameRuleRegistry;
 import com.github.alexmodguy.mediumcore.Mediumcore;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,9 +28,7 @@ public class GuiMixin
             return;
         }
 
-        if (!(Minecraft.getInstance().player.level() instanceof ServerLevel level && level.getGameRules().get(GameRuleRegistry.getMediumcoreGamerule()))){
-            return;
-        }
+        if (!Mediumcore.PROXY.isMediumcoreModeLocally()) return;
 
         if(!Mediumcore.CONFIG.mediumcoreHeartTexture.get()){
             return;

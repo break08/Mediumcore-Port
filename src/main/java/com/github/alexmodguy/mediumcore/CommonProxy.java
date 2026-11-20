@@ -5,7 +5,7 @@ import net.neoforged.neoforge.common.NeoForge;
 
 public class CommonProxy {
     public void commonInit() {
-        NeoForge.EVENT_BUS.register(new CommonEvents());
+        CommonEvents.registerAll();
     }
 
     public void clientInit() {

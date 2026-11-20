@@ -1,5 +1,6 @@
 package com.github.alexmodguy.mediumcore;
 
+import com.github.alexmodguy.mediumcore.client.ClientProxy;
 import com.github.alexmodguy.mediumcore.event.CommonEvents;
 import com.github.alexmodguy.mediumcore.packet.SyncMediumcoreGameRuleMessage;
 import com.mojang.logging.LogUtils;
@@ -32,7 +33,7 @@ public class Mediumcore {
     public static final String MODID = "mediumcore";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static CommonProxy PROXY = new CommonProxy();
+    public static CommonProxy PROXY = FMLEnvironment.getDist() == Dist.CLIENT ? new ClientProxy() : new CommonProxy();;
 
     public static final ModConfigSpec CONFIG_SPEC;
     public static final MediumcoreConfig CONFIG;
@@ -58,14 +59,10 @@ public class Mediumcore {
 
         modContainer.registerConfig(ModConfig.Type.COMMON, CONFIG_SPEC);
 
-        if (FMLEnvironment.getDist() == Dist.DEDICATED_SERVER) {
-            PROXY.commonInit();
-        }
+        PROXY.commonInit();
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             PROXY.clientInit();
         }
-
-        CommonEvents.registerAll();
     }
 
     private void registerPayloads(final RegisterPayloadHandlersEvent event) {
