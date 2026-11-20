@@ -8,11 +8,12 @@ import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.gamerules.GameRuleCategory;
 
+// using forgified fabric api
 public class GameRuleRegistry {
     private static GameRule<Boolean> mediumcoreMode;
 
     public static void setup() {
-        mediumcoreMode = createBoolean("mediumcoreMode", false, GameRuleCategory.PLAYER);
+        mediumcoreMode = createBoolean("mediumcore_mode", false, GameRuleCategory.PLAYER);
     }
 
     public static GameRule<Boolean> createBoolean(String id, boolean defaultVal, GameRuleCategory cat) {

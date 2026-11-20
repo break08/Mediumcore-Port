@@ -11,6 +11,7 @@ logoFile="mediumcore.png" #optional
 credits="Credit to AlexModGuy" #optional
 authors = "${mod_authors}" #optional
 description = '''${mod_description}'''
+issueTrackerURL="https://github.com/break08/Mediumcore-Port/"
 
 [[mixins]]
 config = "${mod_id}.mixins.json"
@@ -31,3 +32,11 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "fabric_api"
+type = "required"
+versionRange = "${forgified_fabric_api_ver}"
+ordering = "NONE"
+side = "BOTH"
+
