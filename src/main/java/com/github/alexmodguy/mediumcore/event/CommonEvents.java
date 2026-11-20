@@ -1,6 +1,5 @@
 package com.github.alexmodguy.mediumcore.event;
 
-import com.github.alexmodguy.mediumcore.FabricIsSoBadAtDataAttach;
 import com.github.alexmodguy.mediumcore.GameRuleRegistry;
 import com.github.alexmodguy.mediumcore.Mediumcore;
 import com.github.alexmodguy.mediumcore.misc.DedicatedServerPropertiesAccessor;
@@ -42,7 +41,7 @@ public class CommonEvents {
                 AttributeInstance attribute = p.getAttribute(Attributes.MAX_HEALTH);
                 if (attribute == null) continue;
 
-                double want = FabricIsSoBadAtDataAttach.getPersisted(p).getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D);
+                double want = p.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).orElseGet(CompoundTag::new).getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D);
                 AttributeModifier current = attribute.getModifier(HEALTH_MODIFIER_UUID);
                 if (current == null || current.amount() != want) {
                     updateHealth(p, want);
@@ -55,7 +54,7 @@ public class CommonEvents {
         ServerLifecycleEvents.SERVER_STARTED.register((handler) -> {
             // onEntityJoinLevel(ServerStartedEvent event)
             if (handler.isDedicatedServer() && handler instanceof DedicatedServer dedicatedServer) {
-                boolean propertiesSayMediumcore = ((DedicatedServerPropertiesAccessor) dedicatedServer.getProperties()).mediumcore$isServerMediumcore();
+                boolean propertiesSayMediumcore = ((DedicatedServerPropertiesAccessor) dedicatedServer.getProperties()).isServerMediumcore();
                 if (propertiesSayMediumcore) {
                     Mediumcore.LOGGER.info("set server game rule for mediumcore because it is set to true in server.properties");
                     for (ServerLevel level : handler.getAllLevels()) {
@@ -69,7 +68,7 @@ public class CommonEvents {
                 boolean mediumcore = GameRuleRegistry.isMediumCoreMode(handler.level().getGameRules());
                 if (mediumcore && handler instanceof ServerPlayer) {
                     Mediumcore.sendNonLocal(new SyncMediumcoreGameRuleMessage(mediumcore), handler);
-                    CompoundTag tag = FabricIsSoBadAtDataAttach.getPersisted(handler);
+                    CompoundTag tag = handler.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).orElseGet(CompoundTag::new);
                     double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D);
                     updateHealth(handler, healthModifiedBy);
                 }
@@ -81,11 +80,11 @@ public class CommonEvents {
         ServerLivingEntityEvents.AFTER_DEATH.register(((entity, damageSource) -> {
             if (entity instanceof Player player && !player.level().isClientSide()) {
                 if (player.level() instanceof ServerLevel slevel && GameRuleRegistry.isMediumCoreMode(slevel.getGameRules())) {
-                    CompoundTag tag = FabricIsSoBadAtDataAttach.getPersisted(player);
+                    CompoundTag tag = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG).orElseGet(CompoundTag::new);
                     double clampedHealth = Mth.clamp(player.getMaxHealth() - Mediumcore.CONFIG.healthDecreasePerDeath.get(), Mediumcore.CONFIG.minimumPlayerHealth.get(), Mediumcore.CONFIG.maxPlayerHealth.get());
                     double healthModifiedBy = tag.getDouble(HEALTH_MODIFIER_TAG).orElse(0.0D) + (clampedHealth - player.getMaxHealth());
                     tag.putDouble(HEALTH_MODIFIER_TAG, healthModifiedBy);
-                    FabricIsSoBadAtDataAttach.getPersistentData(player).put(FabricIsSoBadAtDataAttach.PERSISTED_NBT_TAG, tag);
+                    player.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
                 }
             }
         }));
