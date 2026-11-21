@@ -91,7 +91,7 @@ configurations {
 
 dependencies {
     // Forgified Fabric API
-    implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:0.155.3+26.1.2+3.5.10"
+    implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:0.161.0+26.2+4.0.2"
 
 }
 

@@ -5,8 +5,8 @@ import com.github.alexmodguy.mediumcore.Mediumcore;
 import com.github.alexmodguy.mediumcore.client.ClientMediumcoreUtil;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.components.tabs.Tab;
-import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.world.level.LevelSettings;
@@ -26,7 +26,7 @@ import java.util.List;
 public class CreateWorldScreenMixin {
 
     @Shadow @Nullable
-    private TabNavigationBar tabNavigationBar;
+    private MenuTabBar tabNavigationBar;
 
     @Unique
     @Nullable
